@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVE-Rx PHG | e-Delphi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --brand-navy: #0B2447; 
+            --brand-blue: #19376D; 
+            --brand-gold: #D4AF37; 
+            --brand-gold-light: #F9F4E5;
+            --brand-silver: #cbd5e1; 
+            --surface: #ffffff; 
+            --bg-page: #F3F4F6; 
+            --text-main: #1F2937; 
+            --text-muted: #6B7280;
+            --border: #E5E7EB; 
+        }
+        
+        body { font-family: 'Poppins', sans-serif; color: var(--text-main); margin: 0; padding: 0; background: var(--bg-page); min-height: 100vh; overflow-x: hidden; }
+        
+        /* Interactive Nav */
+        .app-nav { background: var(--surface); border-bottom: 2px solid var(--border); display: flex; justify-content: center; padding: 0 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .nav-btn { background: none; border: none; color: var(--text-muted); padding: 18px 30px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .nav-btn:hover { color: var(--brand-blue); }
+        .nav-btn.active { color: var(--brand-navy); }
+        .nav-btn::after { content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); width: 0; height: 3px; background: var(--brand-gold); transition: width 0.3s ease; border-radius: 3px 3px 0 0; }
+        .nav-btn.active::after { width: 100%; }
+
+        /* Songket Gradient Header */
+        .header-banner { 
+            text-align: center; padding: 50px 20px; color: white; position: relative;
+            background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-blue) 100%), 
+                        url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0l20 20-20 20L0 20z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-blend-mode: overlay;
+            box-shadow: 0 10px 30px rgba(11, 36, 71, 0.2);
+            border-bottom: 4px solid var(--brand-gold);
+            margin-bottom: 40px;
+        }
+        .jata-negara { height: 80px; margin-bottom: 15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); animation: fadeInDown 0.8s ease; }
+        .header-banner h1 { margin: 0; font-size: 2.2rem; font-weight: 700; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); animation: fadeInUp 0.8s ease; }
+        .header-banner p { margin: 8px 0; color: #E5E7EB; font-weight: 300; font-size: 1.1rem; animation: fadeInUp 1s ease; }
+        .rsch-id { display: inline-block; background: var(--brand-gold); color: var(--brand-navy); padding: 5px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); animation: zoomIn 1.2s ease; }
+
+        .container { max-width: 950px; margin: 0 auto 50px auto; padding: 0 15px; perspective: 1000px; }
+        
+        /* Glassmorphism & Hover Cards */
+        .card { 
+            background: var(--surface); border-radius: 12px; padding: 35px; margin-bottom: 30px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03); border: 1px solid rgba(255,255,255,0.4); 
+            border-top: 5px solid var(--brand-blue); transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0; transform: translateY(30px); animation: slideUpFade 0.6s ease forwards;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
+        .card-title { font-size: 1.25rem; color: var(--brand-navy); font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        
+        /* Animations */
+        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        .consent-card { border-top: 5px solid #10B981; background: linear-gradient(145deg, #F0FDF4, #ffffff); }
+        .consent-link { display: inline-flex; align-items: center; background: var(--brand-navy); color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; margin-bottom: 20px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(11,36,71,0.2); }
+        .consent-link:hover { background: var(--brand-blue); transform: scale(1.02); box-shadow: 0 6px 15px rgba(11,36,71,0.3); }
+        .consent-checkbox-wrapper { display: flex; align-items: flex-start; gap: 15px; background: white; padding: 20px; border: 1px solid var(--border); border-radius: 8px; transition: border-color 0.3s; }
+        .consent-checkbox-wrapper:hover { border-color: var(--brand-gold); }
+        .consent-checkbox-wrapper input[type="checkbox"] { width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: #10B981; }
+        .consent-checkbox-wrapper label { font-weight: 500; color: var(--text-main); cursor: pointer; margin-bottom: 0; line-height: 1.5; font-size: 0.95rem; }
+
+        .table-responsive { overflow-x: auto; margin-bottom: 25px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .ref-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--surface); min-width: 450px; }
+        .ref-table th, .ref-table td { padding: 12px 15px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
+        .ref-table th { background: var(--brand-navy); color: var(--brand-gold); font-weight: 600; text-align: left; }
+        .ref-table td:first-child { font-weight: 700; text-align: center; width: 45px; background: var(--brand-gold-light); color: var(--brand-navy); }
+        
+        .form-group { margin-bottom: 20px; }
+        label { font-weight: 600; display: block; margin-bottom: 8px; color: var(--brand-navy); font-size: 0.95rem; }
+        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 0.95rem; transition: all 0.3s; background: #F9FAFB; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--brand-gold); background: var(--surface); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1); }
+        
+        /* Interactive Likert Scale */
+        .likert-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin: 25px 0; }
+        .likert-option { position: relative; cursor: pointer; }
+        .likert-option input[type="radio"] { position: absolute; opacity: 0; }
+        .likert-tile { background: var(--surface); border: 2px solid var(--border); border-radius: 10px; padding: 15px 5px; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .likert-tile:hover { border-color: var(--brand-gold); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(212,175,55,0.15); }
+        .likert-option input[type="radio"]:checked + .likert-tile { background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue)); border-color: var(--brand-gold); transform: scale(1.05); box-shadow: 0 8px 20px rgba(11,36,71,0.3); }
+        .likert-option input[type="radio"]:checked + .likert-tile * { color: var(--surface); }
+        .likert-num { font-size: 1.5rem; font-weight: 700; color: var(--brand-navy); transition: color 0.3s; }
+        .likert-option input[type="radio"]:checked + .likert-tile .likert-num { color: var(--brand-gold); }
+        .likert-text { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 5px; transition: color 0.3s; }
+        
+        .feedback-box { display: none; background: var(--brand-gold-light); padding: 20px; border-left: 5px solid var(--brand-gold); border-radius: 0 8px 8px 0; margin-top: 20px; animation: fadeInDown 0.4s ease; }
+        
+        /* Primary Button */
+        .submit-btn { background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue)); color: var(--brand-gold); border: none; padding: 18px; font-size: 1.15rem; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 20px rgba(11,36,71,0.25); position: relative; overflow: hidden; }
+        .submit-btn::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); transform: skewX(-20deg); transition: 0.5s; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(11,36,71,0.35); }
+        .submit-btn:hover::after { left: 120%; }
+        
+        /* Footer */
+        .footer { background: var(--brand-navy); color: var(--brand-silver); text-align: center; padding: 40px 15px; font-size: 0.9rem; border-top: 4px solid var(--brand-gold); }
+        .footer h2 { color: var(--brand-gold); margin-bottom: 5px; font-size: 1.4rem; }
+        .footer-links { margin: 15px 0; }
+        .footer-links a { color: var(--surface); text-decoration: none; margin: 0 12px; font-weight: 500; cursor: pointer; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--brand-gold); }
+        .footer-credit { margin-top: 20px; color: #9CA3AF; font-size: 0.8rem; }
+        
+        /* Dashboard */
+        .admin-section { display: none; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 25px; }
+        .stat-card { background: var(--surface); padding: 25px; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-left: 5px solid var(--brand-blue); }
+        .stat-header { font-weight: 700; color: var(--brand-navy); margin-bottom: 15px; border-bottom: 2px dashed var(--border); padding-bottom: 10px; font-size: 1.15rem;}
+        .stat-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 1rem; }
+        .feedback-list { font-size: 0.9rem; color: var(--text-main); background: #F9FAFB; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid var(--border); }
+        .admin-lock { text-align: center; padding: 60px 20px; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(11,36,71,0.6); backdrop-filter: blur(4px); }
+        .modal-content { background-color: var(--surface); margin: 5% auto; padding: 40px; width: 85%; max-width: 700px; border-radius: 12px; border-top: 6px solid var(--brand-gold); box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: zoomIn 0.3s ease; }
+        .close { color: var(--text-muted); float: right; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; transition: color 0.3s; }
+        .close:hover { color: #EF4444; }
+    </style>
+</head>
+<body>
+<nav class="app-nav">
+    <button class="nav-btn active" onclick="switchTab('form')">Borang e-Delphi</button>
+    <button class="nav-btn" onclick="switchTab('admin')">Papan Pemuka Analitik</button>
+</nav>
+
+<div class="header-banner">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" alt="Jata Negara" class="jata-negara">
+    <h1>MOVE-Rx PHG</h1>
+    <p>Sistem Pengurusan e-Delphi Pemerhatian & Konsensus Pakar</p>
+    <div class="rsch-id">NMRR ID-26-03968-MPU</div>
+</div>
+
+<div class="container">
+    <div id="formView">
+        <form id="delphiForm">
+            <!-- Animation delay variables to create a cascading load effect -->
+            <div class="card consent-card" style="animation-delay: 0.1s;">
+                <div class="card-title" style="color: #047857;">Borang Keizinan Makluman (Informed Consent)</div>
+                <p style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">Kajian ini telah mendapat kelulusan Jawatankuasa Etika dan Penyelidikan Perubatan (MREC), Kementerian Kesihatan Malaysia. Penyertaan anda adalah secara sukarela. Sila rujuk Lembaran Maklumat Peserta (PIS) untuk maklumat lanjut.</p>
+                <a href="https://drive.google.com/file/d/1YqtIwV9iyB5-iq1Ejx92ZUvzC-RoGRRR/view?usp=sharing" target="_blank" class="consent-link">
+                    <span style="margin-right: 8px;">📄</span> Baca Lembaran Maklumat Peserta (PIS)
+                </a>
+                <div class="consent-checkbox-wrapper">
+                    <input type="checkbox" id="userConsent" required>
+                    <label for="userConsent">Saya mengesahkan bahawa saya telah membaca dan memahami maklumat kajian yang diberikan. Saya dengan sukarela bersetuju untuk menyertai kajian ini.</label>
+                </div>
+            </div>
+
+            <div class="card" style="animation-delay: 0.2s;">
+                <div class="card-title">Bahagian A: Profil Pakar</div>
+                <div class="form-group">
+                    <label>Pusat Tanggungjawab (PTj)</label>
+                    <select id="ptj" required>
+                        <option value="">-- Sila Pilih PTj --</option>
+                        <option value="Bahagian Perkhidmatan Farmasi, JKNP">Bahagian Perkhidmatan Farmasi, JKNP</option>
+                        <option value="H. Tengku Ampuan Afzan, Kuantan">H. Tengku Ampuan Afzan, Kuantan</option>
+                        <option value="H. Sultan Haji Ahmad Shah, Temerloh">H. Sultan Haji Ahmad Shah, Temerloh</option>
+                        <option value="H. Kuala Lipis">H. Kuala Lipis</option>
+                        <option value="H. Bentong">H. Bentong</option>
+                        <option value="H. Raub">H. Raub</option>
+                        <option value="H. Jerantut">H. Jerantut</option>
+                        <option value="H. Jengka">H. Jengka</option>
+                        <option value="H. Pekan">H. Pekan</option>
+                        <option value="H. Muadzam Shah">H. Muadzam Shah</option>
+                        <option value="H. Sultanah Hajjah Kalsom, Cameron">H. Sultanah Hajjah Kalsom, Cameron</option>
+                        <option value="H. Rompin">H. Rompin</option>
+                        <option value="H. Bera">H. Bera</option>
+                        <option value="PKD Kuantan">PKD Kuantan</option>
+                        <option value="PKD Temerloh">PKD Temerloh</option>
+                        <option value="PKD Bentong">PKD Bentong</option>
+                        <option value="PKD Bera">PKD Bera</option>
+                        <option value="PKD Jerantut">PKD Jerantut</option>
+                        <option value="PKD Lipis">PKD Lipis</option>
+                        <option value="PKD Maran">PKD Maran</option>
+                        <option value="PKD Pekan">PKD Pekan</option>
+                        <option value="PKD Raub">PKD Raub</option>
+                        <option value="PKD Rompin">PKD Rompin</option>
+                        <option value="PKD Cameron Highlands">PKD Cameron Highlands</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Jawatan Pentadbiran Semasa</label>
+                    <select id="designation" required>
+                        <option value="">-- Sila Pilih Jawatan --</option>
+                        <option value="KJF">Ketua Jabatan Farmasi (KJF)</option>
+                        <option value="PFK">Pegawai Farmasi Kesihatan (PFK)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Pengalaman dalam Pengurusan Tertinggi (Tahun)</label>
+                    <input type="number" id="experience" min="0" required placeholder="Contoh: 5">
+                </div>
+            </div>
+            
+            <div id="parametersContainer"></div>
+            
+            <button type="submit" class="submit-btn" style="animation: slideUpFade 0.6s ease forwards; animation-delay: 0.8s; opacity: 0;">Sahkan & Hantar Penilaian</button>
+        </form>
+    </div>
+
+    <div id="adminView" class="admin-section card">
+        <div id="adminLogin" class="admin-lock">
+            <div class="card-title" style="justify-content: center;">Akses Penyelidik Sahaja</div>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Sila masukkan kata laluan keselamatan untuk melihat analitik IQR.</p>
+            <input type="password" id="adminPwd" placeholder="Kata Laluan" style="max-width: 300px; margin: 0 auto 20px auto; display: block; text-align: center;">
+            <button type="button" class="submit-btn" style="max-width: 300px;" onclick="checkAdmin()">Log Masuk Secure</button>
+        </div>
+        <div id="adminDashboard" style="display: none;">
+            <div class="card-title">MOVE-Rx PHG: Analisis Konsensus (Real-Time)</div>
+            <div style="background: var(--brand-navy); color: var(--brand-gold); padding: 15px 20px; border-radius: 8px; display: inline-block; font-weight: 700; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                Jumlah Responden Direkod: <span id="totalResp" style="font-size: 1.2rem; color: #ffffff;">0</span>
+            </div>
+            <div class="dashboard-grid" id="dashboardData"></div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <h2>MOVE-Rx PHG</h2>
+    <p style="color: var(--brand-gold-light); margin-bottom: 20px;">Instrumen Pemarkahan Prioriti Pertukaran Anggota Farmasi Negeri Pahang</p>
+    <div class="footer-links">
+        <a onclick="openModal('modalProjek')">Mengenai Projek</a> • 
+        <a onclick="openModal('modalPrivasi')">Notis Privasi</a> • 
+        <a onclick="openModal('modalTerma')">Terma & Hak Cipta</a> • 
+        <a onclick="openModal('modalHubungi')">Hubungi Kami</a>
+    </div>
+    <p style="margin-top: 30px;">© 2026 MOVE-Rx PHG. Hak Cipta Terpelihara.</p>
+    <div class="footer-credit">Dibangunkan oleh Muhammad Hafizul Aniq bin Khairul Hafidz, RPh. 25588</div>
+</footer>
+
+<!-- Modals -->
+<div id="modalProjek" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modalProjek')">&times;</span>
+    <h2 style="color:var(--brand-navy); border-bottom: 2px solid var(--brand-gold); padding-bottom: 10px;">Mengenai Projek</h2>
+    <p style="line-height: 1.7;">Projek MOVE-Rx PHG (NMRR ID-26-03968-MPU) merupakan instrumen e-Delphi bagi membangunkan dan mengesahkan wajaran keutamaan pertukaran anggota farmasi di Jabatan Kesihatan Negeri Pahang. Ia bertujuan menggantikan kriteria pengurusan yang subjektif dengan kerangka penilaian sumber manusia yang objektif, standard, dan telus.</p>
+    <h3 style="color: var(--brand-navy); font-size: 1.1rem; margin-top: 25px;">Bagaimana Sistem e-Delphi Ini Berfungsi</h3>
+    <p style="font-size: 0.95rem; line-height: 1.6;">Platform e-Delphi ini beroperasi berasaskan arkitektur <em>serverless</em>. Antara muka diuruskan oleh Cloudflare Pages, manakala pangkalan data dikawal selia secara automatik oleh Google Sheets.</p>
+    <ul style="font-size: 0.95rem; line-height: 1.8; color: var(--text-muted);">
+        <li><strong style="color: var(--text-main);">Penghantaran Data:</strong> Pakej data dihantar secara selamat terus ke API pelayan Google menggunakan prokol JSON/POST.</li>
+        <li><strong style="color: var(--text-main);">Analitik Masa Nyata:</strong> Algoritma secara automatik mengira nilai <strong>Median</strong> dan <strong>Interquartile Range (IQR)</strong> bagi menjustifikasikan persetujuan kumpulan pakar.</li>
+    </ul>
+  </div>
+</div>
+
+<div id="modalPrivasi" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modalPrivasi')">&times;</span>
+    <h2 style="color:var(--brand-navy); border-bottom: 2px solid var(--brand-gold); padding-bottom: 10px;">Notis Privasi</h2>
+    <p style="line-height: 1.7;">Maklumat anda dilindungi sepenuhnya di bawah garis panduan Jawatankuasa Etika dan Penyelidikan Perubatan (MREC) KKM. Semua penilaian e-Delphi dan justifikasi kualitatif dianalisis secara rahsia (anonymous) bagi meneutralkan ralat <em>bias</em>. Identiti dan data peribadi anda tidak akan didedahkan dalam apa jua bentuk laporan penerbitan.</p>
+  </div>
+</div>
+
+<div id="modalTerma" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modalTerma')">&times;</span>
+    <h2 style="color:var(--brand-navy); border-bottom: 2px solid var(--brand-gold); padding-bottom: 10px;">Terma & Hak Cipta</h2>
+    <p style="line-height: 1.7;">© 2026 MOVE-Rx PHG. Hak cipta terpelihara. Instrumen dan kod sumber ini dibangunkan oleh Muhammad Hafizul Aniq bin Khairul Hafidz, RPh. 25588 khusus untuk kegunaan penyelidikan dan pengurusan rasmi. Sebarang salinan atau pengedaran tanpa kebenaran secara bertulis adalah dilarang sama sekali.</p>
+  </div>
+</div>
+
+<div id="modalHubungi" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modalHubungi')">&times;</span>
+    <h2 style="color:var(--brand-navy); border-bottom: 2px solid var(--brand-gold); padding-bottom: 10px;">Hubungi Kami</h2>
+    <p style="line-height: 1.7;">Untuk sebarang pertanyaan berkaitan kelangsungan teknikal portal atau protokol kajian e-Delphi, sila hubungi:</p>
+    <ul style="line-height: 1.8; margin-top: 15px;">
+        <li><strong>Penyelidik Utama:</strong> Muhammad Hafizul Aniq bin Khairul Hafidz (011-16125544)</li>
+        <li><strong>MREC KKM:</strong> Setiausaha Jawatankuasa Etika dan Penyelidikan Perubatan (03-3362 8407)</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+    const paramData = [
+        { id: 'p1', title: 'Parameter 1: Alasan Pertukaran', ref: `<tr><th>Skor</th><th>Kriteria Penilaian</th></tr><tr><td>1</td><td>Tiada alasan mendesak</td></tr><tr><td>2</td><td>Kemajuan kerjaya</td></tr><tr><td>3</td><td>Menjaga ibu/bapa sakit/uzur</td></tr><tr><td>4</td><td>Mengikut pasangan (PJJ)</td></tr><tr><td>5</td><td>Ancaman keselamatan / gangguan di tempat kerja / kesihatan</td></tr>` },
+        { id: 'p2', title: 'Parameter 2: Tempoh di Fasiliti Semasa', ref: `<tr><th>Skor</th><th>Kriteria Penilaian</th></tr><tr><td>1</td><td>< 2 tahun</td></tr><tr><td>2</td><td>2 - 3 tahun</td></tr><tr><td>3</td><td>4 - 5 tahun</td></tr><tr><td>4</td><td>6 - 8 tahun</td></tr><tr><td>5</td><td>> 8 tahun</td></tr>` },
+        { id: 'p3', title: 'Parameter 3: Beban Logistik & Jarak', ref: `<tr><th>Skor</th><th>Laluan Biasa</th><th>Laluan Berbukit/Pedalaman</th></tr><tr><td>1</td><td>Bawah 30 km / Bujang</td><td>-</td></tr><tr><td>2</td><td>31km - 70km</td><td>Bawah 30 km</td></tr><tr><td>3</td><td>71km - 150km</td><td>31km - 70km</td></tr><tr><td>4</td><td>151km - 300km</td><td>71km - 150km</td></tr><tr><td>5</td><td>Melebihi 300km / Antara negeri</td><td>151km - 300km</td></tr>` },
+        { id: 'p4', title: 'Parameter 4: Tanggungan Penjagaan Keluarga (Anak)', ref: `<tr><th>Skor</th><th>Kriteria Penilaian</th></tr><tr><td>1</td><td>Tiada anak / Bujang</td></tr><tr><td>2</td><td>Seorang anak</td></tr><tr><td>3</td><td>2 orang anak</td></tr><tr><td>4</td><td>3 orang anak</td></tr><tr><td>5</td><td>≥ 4 orang anak</td></tr>` },
+        { id: 'p5', title: 'Parameter 5: Tanggungan Penjagaan Keluarga (Umur Anak)', ref: `<tr><th>Skor</th><th>Kriteria Penilaian</th></tr><tr><td>1</td><td>Tiada anak / Bujang</td></tr><tr><td>2</td><td>Mempunyai anak di sekolah menengah</td></tr><tr><td>3</td><td>Pelbagai peringkat umur (sekolah menengah dan rendah)</td></tr><tr><td>4</td><td>Mempunyai anak kecil (bayi/pra-sekolah/sekolah rendah)</td></tr><tr><td>5</td><td>Mempunyai anak berkeperluan khas (OKU)</td></tr>` },
+        { id: 'p6', title: 'Parameter 6: Tanggungan (Pasangan / Ibu / Bapa)', ref: `<tr><th>Skor</th><th>Kriteria Penilaian</th></tr><tr><td>1</td><td>Tiada keperluan penjagaan / Tidak berkenaan</td></tr><tr><td>2</td><td>Menjaga pasangan/ibu/bapa (Sihat tetapi perlukan pemantauan)</td></tr><tr><td>3</td><td>Menjaga pasangan/ibu/bapa dengan penyakit kronik terkawal</td></tr><tr><td>4</td><td>Menjaga pasangan/ibu/bapa uzur (Pergerakan terhad)</td></tr><tr><td>5</td><td>Menjaga pasangan/ibu/bapa uzur (Terlantar/ kritikal)</td></tr>` },
+        { id: 'p7', title: 'Parameter 7: Implikasi (Tanpa Pengganti Dihantar Serentak)', ref: `<tr><th>Skor</th><th>Kriteria Penilaian</th></tr><tr><td>1</td><td>Menyebabkan keperluan kritikal untuk mobilisasi/penggantian dan menjejaskan operasi</td></tr><tr><td>3</td><td>Memerlukan pelarasan/penggantian tugas secara berkala</td></tr><tr><td>5</td><td>Beban kerja semasa boleh diserap oleh anggota sedia ada</td></tr>` },
+        { id: 'p8', title: 'Parameter 8: Implikasi (Kelangsungan Perkhidmatan)', ref: `<tr><th>Skor</th><th>Kriteria Penilaian</th></tr><tr><td>1</td><td>Terpaksa menutup beberapa perkhidmatan (e.g. MTAC/klinikal)</td></tr><tr><td>3</td><td>Skop perkhidmatan terpaksa dihadkan / Tugas pentadbiran tertangguh</td></tr><tr><td>5</td><td>Perkhidmatan teras boleh diteruskan seperti biasa</td></tr>` },
+        { id: 'p9', title: 'Parameter 9: Perakuan Ketua Jabatan & Prestasi', ref: `<tr><th>Skor</th><th>Kriteria Penilaian</th></tr><tr><td>1</td><td>Tidak disokong atas kepentingan perkhidmatan</td></tr><tr><td>3</td><td>Disokong dengan pengganti dihantar serentak</td></tr><tr><td>4</td><td>Disokong dengan pengganti dihantar kemudian</td></tr><tr><td>5</td><td>Disokong tanpa keperluan pengganti</td></tr>` }
+    ];
+
+    const labels = ["Sangat Tidak Bersetuju", "Tidak Bersetuju", "Neutral", "Bersetuju", "Sangat Bersetuju"];
+    const container = document.getElementById('parametersContainer');
+    
+    // Add staggered delay to dynamically generated cards
+    let delay = 0.3;
+
+    paramData.forEach(p => {
+        let likert = '';
+        for(let i=1; i<=5; i++) {
+            likert += `<label class="likert-option">
+                <input type="radio" name="${p.id}_score" value="${i}" required>
+                <div class="likert-tile"><span class="likert-num">${i}</span><span class="likert-text">${labels[i-1]}</span></div>
+            </label>`;
+        }
+        container.innerHTML += `
+            <div class="card" style="animation-delay: ${delay}s;">
+                <div class="card-title">${p.title}</div>
+                <div class="table-responsive"><table class="ref-table">${p.ref}</table></div>
+                <label>Nilaikan tahap persetujuan anda terhadap wajaran pemarkahan di atas:</label>
+                <div class="likert-wrapper">${likert}</div>
+                <div id="${p.id}_feedback_box" class="feedback-box">
+                    <label style="color:var(--brand-navy);">Sila berikan justifikasi atau cadangan pindaan (Wajib kerana skor ≤ 3):</label>
+                    <textarea id="${p.id}_feedback" name="${p.id}_feedback" rows="3" placeholder="Taipkan ulasan atau idea pakar anda di sini..."></textarea>
+                </div>
+            </div>`;
+        delay += 0.05;
+    });
+
+    document.getElementById('delphiForm').addEventListener('change', function(e) {
+        if(e.target.type === 'radio') {
+            const pid = e.target.name.split('_')[0];
+            const box = document.getElementById(`${pid}_feedback_box`);
+            const input = document.getElementById(`${pid}_feedback`);
+            if (e.target.value <= 3) { box.style.display = 'block'; input.required = true; } 
+            else { box.style.display = 'none'; input.required = false; input.value = ''; }
+        }
+    });
+
+    document.getElementById('delphiForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.querySelector('.submit-btn');
+        btn.innerText = 'MEMPROSES DATA...';
+        btn.style.background = 'var(--brand-silver-dark)';
+        btn.style.color = '#ffffff';
+        
+        let submission = { ptj: document.getElementById('ptj').value, desig: document.getElementById('designation').value, exp: document.getElementById('experience').value, scores: {}, feedback: {} };
+        
+        paramData.forEach(p => {
+            const selectedScore = document.querySelector(`input[name="${p.id}_score"]:checked`);
+            if (selectedScore) {
+                submission.scores[p.id] = parseInt(selectedScore.value);
+                submission.feedback[p.id] = document.getElementById(`${p.id}_feedback`).value;
+            }
+        });
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxWY2wK3XobpP51R591k0CnE4n6CtkSaifm9_RmuxQEf_F1M8TUG7cbKrdCiwEqQq3m/exec'; 
+
+        fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(submission) })
+        .then(response => response.json())
+        .then(data => {
+            alert('Berjaya! Penilaian anda telah direkodkan ke dalam pangkalan data rasmi MOVE-Rx PHG.');
+            this.reset();
+            document.querySelectorAll('.feedback-box').forEach(b => b.style.display = 'none');
+            btn.innerText = 'Sahkan & Hantar Penilaian';
+            btn.style.background = 'linear-gradient(135deg, var(--brand-navy), var(--brand-blue))';
+            btn.style.color = 'var(--brand-gold)';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            alert('Ralat Rangkaian. Sila pastikan talian internet anda stabil dan cuba sebentar lagi.');
+            btn.innerText = 'Sahkan & Hantar Penilaian';
+            btn.style.background = 'linear-gradient(135deg, var(--brand-navy), var(--brand-blue))';
+            btn.style.color = 'var(--brand-gold)';
+        });
+    });
+
+    function switchTab(tab) {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.nav-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
+        document.getElementById('formView').style.display = tab === 'form' ? 'block' : 'none';
+        document.getElementById('adminView').style.display = tab === 'admin' ? 'block' : 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function checkAdmin() {
+        if(document.getElementById('adminPwd').value === 'admin123') {
+            document.getElementById('adminLogin').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            renderDashboard();
+        } else {
+            alert('Akses Ditolak. Kata laluan salah.');
+        }
+    }
+
+    function renderDashboard() {
+        document.getElementById('dashboardData').innerHTML = '<div style="text-align:center; padding: 40px;"><p style="color:var(--brand-navy); font-weight:700; font-size:1.1rem; animation: pulse 1.5s infinite;">Menganalisis Konsensus Data (Live)...</p></div>';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxWY2wK3XobpP51R591k0CnE4n6CtkSaifm9_RmuxQEf_F1M8TUG7cbKrdCiwEqQq3m/exec'; 
+        
+        fetch(scriptURL)
+        .then(response => response.json())
+        .then(db => {
+            document.getElementById('totalResp').innerText = db.length;
+            let html = '';
+            if(db.length === 0) {
+                document.getElementById('dashboardData').innerHTML = '<p style="text-align:center; color:var(--text-muted); font-style:italic;">Pangkalan data masih kosong. Sila tunggu responden pertama.</p>';
+                return;
+            }
+            paramData.forEach(p => {
+                let scores = db.map(row => parseFloat(row.scores[p.id])).filter(val => !isNaN(val)).sort((a,b) => a-b);
+                let feedback = db.filter(row => row.feedback[p.id] && row.feedback[p.id].toString().trim() !== "").map(row => `<strong style="color:var(--brand-navy);">${row.ptj} (${row.desig}, ${row.exp} thn):</strong> ${row.feedback[p.id]}`);
+                
+                const median = calculateMedian(scores);
+                const q1 = calculatePercentile(scores, 0.25);
+                const q3 = calculatePercentile(scores, 0.75);
+                const iqr = q3 - q1;
+
+                let fbHtml = feedback.length > 0 ? `<div class="feedback-list"><strong style="color:var(--brand-navy); border-bottom:1px solid var(--border); padding-bottom:5px; display:inline-block; margin-bottom:10px;">Justifikasi Kualitatif Pakar:</strong><br> ` + feedback.join('<br><br>') + `</div>` : '';
+
+                html += `
+                <div class="stat-card" style="animation: slideUpFade 0.5s ease forwards;">
+                    <div class="stat-header">${p.title}</div>
+                    <div class="stat-row"><span>Median Skor:</span> <strong style="font-size: 1.25rem; color:var(--brand-navy);">${median.toFixed(2)}</strong></div>
+                    <div class="stat-row"><span>Interquartile Range (IQR):</span> <strong style="font-size: 1.25rem; color: ${iqr <= 1 ? '#10b981' : '#ef4444'};">${iqr.toFixed(2)}</strong></div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); text-align: right; margin-bottom: 10px;">(Konsensus disahkan jika IQR ≤ 1.0)</div>
+                    ${fbHtml}
+                </div>`;
+            });
+            document.getElementById('dashboardData').innerHTML = html;
+        })
+        .catch(error => {
+            document.getElementById('dashboardData').innerHTML = '<p style="text-align:center; color:#EF4444; font-weight:600;">Gagal mengakses pangkalan data. Sila periksa rangkaian anda.</p>';
+        });
+    }
+
+    function calculateMedian(arr) {
+        if (arr.length === 0) return 0;
+        const mid = Math.floor(arr.length / 2);
+        return arr.length % 2 !== 0 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
+    }
+
+    function calculatePercentile(arr, p) {
+        if (arr.length === 0) return 0;
+        if (p <= 0) return arr[0];
+        if (p >= 1) return arr[arr.length - 1];
+        const index = (arr.length - 1) * p;
+        const lower = Math.floor(index);
+        const upper = lower + 1;
+        const weight = index % 1;
+        if (upper >= arr.length) return arr[lower];
+        return arr[lower] * (1 - weight) + arr[upper] * weight;
+    }
+
+    // Modal Functions
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+    }
+    
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = "none";
+        }
+    }
+</script>
+</body>
+</html>
