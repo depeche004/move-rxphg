@@ -266,14 +266,14 @@
 
     // Send data to Google Sheets
     // PASTE YOUR GOOGLE WEB APP URL BELOW
-    const scriptURL = 'YOUR_WEB_APP_URL_HERE'; 
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxWY2wK3XobpP51R591k0CnE4n6CtkSaifm9_RmuxQEf_F1M8TUG7cbKrdCiwEqQq3m/exec'; 
 
     fetch(scriptURL, {
         method: 'POST',
         body: JSON.stringify(submission)
     })
     .then(response => {
-        alert('Berjaya! Data pakar telah disimpan ke pangkalan data rasmi.');
+        alert('Berjaya! Data telah disimpan ke pangkalan data rasmi.');
         this.reset();
         document.querySelectorAll('.feedback-box').forEach(b => b.style.display = 'none');
         btn.innerText = 'Sahkan & Hantar Penilaian';
