@@ -134,7 +134,7 @@
 <div class="header-banner">
     <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" alt="Jata Negara" class="jata-negara">
     <h1>MOVE-Rx PHG</h1>
-    <p>Sistem Pengurusan e-Delphi Pemerhatian & Konsensus Pakar</p>
+    <p>Sistem Pengurusan e-Delphi Pemerhatian & Konsensus Ketua Jabatan</p>
     <div class="rsch-id">NMRR ID-26-03968-MPU</div>
 </div>
 
@@ -155,7 +155,7 @@
             </div>
 
             <div class="card" style="animation-delay: 0.2s;">
-                <div class="card-title">Bahagian A: Profil Pakar</div>
+                <div class="card-title">Bahagian A: Profil</div>
                 <div class="form-group">
                     <label>Pusat Tanggungjawab (PTj)</label>
                     <select id="ptj" required>
@@ -409,7 +409,7 @@
                 const q3 = calculatePercentile(scores, 0.75);
                 const iqr = q3 - q1;
 
-                let fbHtml = feedback.length > 0 ? `<div class="feedback-list"><strong style="color:var(--brand-navy); border-bottom:1px solid var(--border); padding-bottom:5px; display:inline-block; margin-bottom:10px;">Justifikasi Kualitatif Pakar:</strong><br> ` + feedback.join('<br><br>') + `</div>` : '';
+                let fbHtml = feedback.length > 0 ? `<div class="feedback-list"><strong style="color:var(--brand-navy); border-bottom:1px solid var(--border); padding-bottom:5px; display:inline-block; margin-bottom:10px;">Justifikasi Kualitatif:</strong><br> ` + feedback.join('<br><br>') + `</div>` : '';
 
                 html += `
                 <div class="stat-card" style="animation: slideUpFade 0.5s ease forwards;">
